@@ -26,8 +26,6 @@ public class BoardManager : MonoBehaviour
             Instance = this;
         else
             Destroy(this);
-
-        CreateBoard();
     }
 
     public void CreateBoard()

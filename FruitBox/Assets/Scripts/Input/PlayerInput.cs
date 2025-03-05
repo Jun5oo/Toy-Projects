@@ -11,6 +11,17 @@ public class PlayerInput : MonoBehaviour
  
     void Update()
     {
+        if (GameManager.Instance.IsGameFinished())
+            return; 
+
+        if (!GameManager.Instance.IsGameStarted())
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+                GameManager.Instance.StartGame();
+
+            return; 
+        }
+
         HandleSelection(); 
     }
 

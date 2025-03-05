@@ -1,17 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
-    public void Awake()
+    [SerializeField] TextMeshProUGUI titleUI; 
+    [SerializeField] TextMeshProUGUI scoreUI;
+    [SerializeField] TextMeshProUGUI timerUI;
+    
+    [SerializeField] GameObject finalScoreUI;
+
+    [SerializeField] Slider sliderUI;
+    [SerializeField] Timer timer;
+    
+    void Awake()
     {
         if (Instance == null)
             Instance = this;
         else
             Destroy(this); 
+    }
+
+    void Start()
+    {
+        sliderUI.maxValue = timer.GetDuration(); 
     }
 
     public Rect GetScreenRect(RectTransform rectTransform)
@@ -44,5 +60,38 @@ public class UIManager : MonoBehaviour
             if (selectionRect.Overlaps(cellRect) && available.IsSelectionEnable())
                 BoardManager.Instance.AddToSelected(available);
         }
+    }
+
+    public void UpdateTimerUI(float elapsedTime)
+    {
+        elapsedTime = Mathf.Max(0, elapsedTime); 
+
+        float minutes = Mathf.FloorToInt(elapsedTime / 60);
+        float seconds = Mathf.FloorToInt(elapsedTime % 60);
+
+        timerUI.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        sliderUI.value = elapsedTime; 
+    }
+
+    public void UpdateScoreUI(int score) => scoreUI.text = score.ToString();
+    public void ActiveTitleUI() => titleUI.gameObject.SetActive(false);
+    public void UnActiveTitleUI() => titleUI.gameObject.SetActive(false); 
+    public void ActiveGameUI()
+    {
+        scoreUI.gameObject.SetActive(true);
+        timerUI.gameObject.SetActive(true);
+        sliderUI.gameObject.SetActive(true);
+    }
+
+    public void UnActiveGameUI()
+    {
+        scoreUI.gameObject.SetActive(false);
+        timerUI.gameObject.SetActive(false);
+        sliderUI.gameObject.SetActive(false);
+    }
+
+    public void ActiveGameEndUI()
+    {
+        finalScoreUI.gameObject.SetActive(true); 
     }
 }
